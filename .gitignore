@@ -1,0 +1,6 @@
+*.xml
+*.log
+*.apk
+*.zip 
+/golang_zone/pkg
+/golang_zone/bin
