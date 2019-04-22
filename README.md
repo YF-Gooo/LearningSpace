@@ -1,2 +1,2 @@
 # LearningSpace
-This is a learning zone~
+This is a learning space~

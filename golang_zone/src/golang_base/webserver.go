@@ -8,5 +8,5 @@ func firstPage(w http.ResponseWriter, r *http.Request){
 }
 func main(){
 	http.HandleFunc("/",firstPage)
-	http.ListenAndServe(":10000",nil)
+	http.ListenAndServe("0.0.0.0:10000",nil)
 }
