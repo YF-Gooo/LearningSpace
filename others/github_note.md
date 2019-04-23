@@ -19,3 +19,18 @@
     git push --set-upstrean origin master
     git checkout dev //上传dev分支
     git push --set-upstream origin dev
+
+## git config
+    Git全局配置和单个仓库的用户名邮箱配置
+
+    学习git的时候, 大家刚开始使用之前都配置了一个全局的用户名和邮箱
+
+    $ git config --global user.name “github’s Name”
+    $ git config --global user.email "github@xx.com"
+    $ git config --list
+
+    如果你公司的项目是放在自建的gitlab上面, 如果你不进行配置用户名和邮箱的话, 则会使用全局的, 这个时候是错误的, 正确的做法是针对公司的项目, 在项目根目录下进行单独配置
+
+    $ git config user.name “gitlab’s Name”
+    $ git config user.email "gitlab@xx.com"
+    $ git config --list
