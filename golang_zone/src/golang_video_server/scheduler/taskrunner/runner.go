@@ -9,15 +9,15 @@ type Runner struct {
 	Data dataChan
 	dataSize int
 	longLived bool
-	Dispatcher fn 
+	Dispatcher fn
 	Executor fn
 }
 
 func NewRunner(size int, longlived bool, d fn, e fn) *Runner {
 	return &Runner {
-		Controller: make(chan string, 1),
+		Controller: make(chan string, 1), 
 		Error: make(chan string, 1),
-		Data: make(chan interface{}, size),
+		Data: make(chan interface{}, size), 
 		longLived: longlived,
 		dataSize: size,
 		Dispatcher: d,
@@ -36,30 +36,28 @@ func (r *Runner) startDispatch() {
 
 	for {
 		select {
-		case c :=<- r.Controller:
-			if c == READY_TO_DISPATCH {
-				err := r.Dispatcher(r.Data)
-				if err != nil {
-					r.Error <- CLOSE
+		case c:=<-r.Controller:
+			if c==READY_TO_DISPATCH {
+				err:=r.Dispatcher(r.Data)
+				if err!=nil{
+					r.Error<-CLOSE
 				} else {
-					r.Controller <- READY_TO_EXECUTE
+					r.Controller <-READY_TO_EXECUTE
 				}
 			}
 
-			if c == READY_TO_EXECUTE {
-				err := r.Executor(r.Data)
-				if err != nil {
+			if c==READY_TO_EXECUTE {
+				err:=r.Executor(r.Data)
+				if err!=nil {
 					r.Error <- CLOSE
 				} else {
 					r.Controller <- READY_TO_DISPATCH
 				}
 			}
-		case e :=<- r.Error:
-			if e == CLOSE {
+		case e:=<-r.Error:
+			if e==CLOSE {
 				return
-			}
-		default:
-
+			}	
 		}
 	}
 }

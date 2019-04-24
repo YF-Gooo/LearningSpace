@@ -1,8 +1,8 @@
-package main 
+package main
 
 import (
-	"net/http"
 	"github.com/julienschmidt/httprouter"
+	"net/http"
 )
 
 type middleWareHandler struct {
@@ -19,22 +19,17 @@ func NewMiddleWareHandler(r *httprouter.Router, cc int) http.Handler {
 
 func RegisterHandlers() *httprouter.Router {
 	router := httprouter.New()
-
 	router.GET("/videos/:vid-id", streamHandler)
-
 	router.POST("/upload/:vid-id", uploadHandler)
-
 	router.GET("/testpage", testPageHandler)
-
 	return router
 }
 
 func (m middleWareHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !m.l.GetConn() {
-		sendErrorResponse(w, http.StatusTooManyRequests, "Too many requests")
+		sendErrorResponse(w, http.StatusTooManyRequests, "Too many requests.")
 		return
 	}
-
 	m.r.ServeHTTP(w, r)
 	defer m.l.ReleaseConn()
 }

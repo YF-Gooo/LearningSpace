@@ -5,10 +5,15 @@ import (
 	"strconv"
 	"time"
 	"fmt"
+	"video_server/api/utils"
 )
 
+var (
+	tempvid string
+	tempsid string
+)
 
-var tempvid string
+// init(dblogin, truncate tables)-> run tests -> clear data(truncate tables)
 
 func clearTables() {
 	dbConn.Exec("truncate users")
@@ -44,7 +49,7 @@ func testGetUser(t *testing.T) {
 	}
 }
 
-func  testDeleteUser(t *testing.T) {
+func testDeleteUser(t *testing.T) {
 	err := DeleteUser("avenssi", "123")
 	if err != nil {
 		t.Errorf("Error of DeleteUser: %v", err)
@@ -56,7 +61,6 @@ func testRegetUser(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error of RegetUser: %v", err)
 	}
-
 	if pwd != "" {
 		t.Errorf("Deleting user test failed")
 	}
@@ -72,30 +76,30 @@ func TestVideoWorkFlow(t *testing.T) {
 }
 
 func testAddVideoInfo(t *testing.T) {
-	vi, err := AddNewVideo(1, "my-video")
-	if err != nil {
+	vi, err:=AddNewVideo(1, "my-video")
+	if err!=nil {
 		t.Errorf("Error of AddVideoInfo: %v", err)
 	}
 	tempvid = vi.Id
 }
 
 func testGetVideoInfo(t *testing.T) {
-	_, err := GetVideoInfo(tempvid)
-	if err != nil {
+	_, err:=GetVideoInfo(tempvid)
+	if err!=nil {
 		t.Errorf("Error of GetVideoInfo: %v", err)
 	}
 }
 
 func testDeleteVideoInfo(t *testing.T) {
-	err := DeleteVideoInfo(tempvid)
-	if err != nil {
+	err:=DeleteVideoInfo(tempvid)
+	if err!=nil {
 		t.Errorf("Error of DeleteVideoInfo: %v", err)
 	}
 }
 
 func testRegetVideoInfo(t *testing.T) {
-	vi, err := GetVideoInfo(tempvid)
-	if err != nil || vi != nil{
+	vi, err:= GetVideoInfo(tempvid)
+	if err!=nil || vi !=nil{
 		t.Errorf("Error of RegetVideoInfo: %v", err)
 	}
 }
@@ -103,37 +107,57 @@ func testRegetVideoInfo(t *testing.T) {
 func TestComments(t *testing.T) {
 	clearTables()
 	t.Run("AddUser", testAddUser)
-	t.Run("AddCommnets", testAddComments)
+	t.Run("AddComments", testAddComments)
 	t.Run("ListComments", testListComments)
 }
 
-func testAddComments(t *testing.T) {
-	vid := "12345"
-	aid := 1
-	content := "I like this video"
-
-	err := AddNewComments(vid, aid, content)
-
-	if err != nil {
+func testAddComments(t * testing.T) {
+	vid:="12345"
+	aid:=1
+	content:= "I like this video"
+	err:=AddNewComments(vid, aid, content)
+	if err!=nil {
 		t.Errorf("Error of AddComments: %v", err)
 	}
 }
 
 func testListComments(t *testing.T) {
-	vid := "12345"
-	from := 1514764800
-	to, _ := strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
-
-	res, err := ListComments(vid, from, to)
-	if err != nil {
+	vid:="12345"
+	from:=1514764800
+	to, _:=strconv.Atoi(strconv.FormatInt(time.Now().UnixNano()/1000000000, 10))
+	res, err:=ListComments(vid, from, to)
+	if err!=nil{
 		t.Errorf("Error of ListComments: %v", err)
 	}
-
-	for i, ele := range res {
-		fmt.Printf("comment: %d, %v \n", i, ele)
+	for i, ele:=range res {
+		fmt.Printf("comment: %d, %+v \n", i, ele)
 	}
-}	
+}
 
+func TestSessions(t *testing.T) {
+	clearTables()
+	t.Run("AddSession", testAddSession)
+	t.Run("RetriveOneSession", testRetriveSession)
+	clearTables()
+}
 
+func testAddSession(t * testing.T) {
+	sid, err:=utils.NewUUID()
+	if err!=nil{
+		t.Errorf("Error of UUID, %v", err)
+	}
+	tempsid = sid
+	ttl:=int64(129183174987124)
+	err= InsertSession(sid, ttl, "skyone")
+	if err!=nil{
+		t.Errorf("Error of InsertSession: %v", err)
+	}
+}
 
-
+func testRetriveSession(t *testing.T) {
+	res, err:=RetrieveSession(tempsid)
+	if err!=nil{
+		t.Errorf("Error of RetriveSession: %v", err)
+	}
+	fmt.Printf("session: %+v", res)
+}
