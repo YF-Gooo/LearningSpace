@@ -9,14 +9,9 @@
     
 ## git branch 创建分支
     git branch -a //查看所有分支
-    git checkout -b 
-    dev //创建dev分支
+    git checkout -b dev //创建dev分支
     git checkout master //切换master分支
     git merge dev //把dev分支合并进入(master)
-
-## 删除分支
-    git branch -d 分支名
-    git remote prune origin //如果github上面的分支已经删掉了，需要运行这个删除本地的跟踪
 
 ## github 上传
     //把项目上传到github
@@ -39,4 +34,3 @@
     $ git config user.name “gitlab’s Name”
     $ git config user.email "gitlab@xx.com"
     $ git config --list
-
